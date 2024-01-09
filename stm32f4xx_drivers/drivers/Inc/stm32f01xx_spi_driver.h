@@ -37,8 +37,8 @@ typedef struct{
  */
 #define SPI_BUS_CONFIG_FD					1
 #define SPI_BUS_CONFIG_HD					2
-#define SPI_BUS_CONFIG_SIMPLEX_TX			3
-#define SPI_BUS_CONFIG_SIMPLEX_RX			4
+//#define SPI_BUS_CONFIG_SIMPLEX_TX			3 // not required
+#define SPI_BUS_CONFIG_SIMPLEX_RX			3
 
 /*
  * @SPI_SclkSpeed
@@ -87,6 +87,12 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx); /*use RCC peripheral reset register, depen
 
 /*Peripheral clock control*/
 void SPI_PClkControl(SPI_RegDef_t *pSPIx, uint8_t enable);
+
+/* enable/disable SPI peripheral */
+void SPI_Enable(SPI_RegDef_t *pSPIx);
+void SPI_Disable(SPI_RegDef_t *pSPIx);
+
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx,uint8_t enable);
 
 /*
  * Data send and receive

@@ -20,16 +20,37 @@ static void SPI_reset(SPI_RegDef_t *pSPIx){
 	pSPIx->I2SPR = 0x0002;
 }
 
+
 /*Initialitazion / Deinitialization */
 void SPI_Init(SPI_Handle_t *pSPIHandle){
 	uint32_t temp = 0;
-	temp = pSPIHandle->SPIConfig.SPI_DeviceMode;
-	temp |= pSPIHandle->SPIConfig.SPI_BusCongif;
-	temp |= pSPIHandle->SPIConfig.SPI_SclkSpeed;
-	temp |= pSPIHandle->SPIConfig.SPI_CPHA;
-	temp |= pSPIHandle->SPIConfig.SPI_CPOL;
-	temp |= pSPIHandle->SPIConfig.SPI_DFF;
-	temp |= pSPIHandle->SPIConfig.SPI_SSM;
+	temp = pSPIHandle->SPIConfig.SPI_DeviceMode << SPI_CR1_MSTR;
+
+	SPI_PClkControl(pSPIHandle->pSPIx, ENABLE);
+
+	if(pSPIHandle->SPIConfig.SPI_BusCongif == SPI_BUS_CONFIG_FD){
+		//BIDI mode should be cleared
+		temp &= ~(1<<SPI_CR1_BIDIMODE);
+	}else if(pSPIHandle->SPIConfig.SPI_BusCongif == SPI_BUS_CONFIG_HD){
+		//BIDI mode should be set
+		temp |= (1<<SPI_CR1_BIDIMODE);
+	}else if(pSPIHandle->SPIConfig.SPI_BusCongif == SPI_BUS_CONFIG_SIMPLEX_RX){
+		//BIDI mode should be cleared
+		temp &= ~(1<<SPI_CR1_BIDIMODE);
+		//RXONLY should be set
+		temp |= (1<<SPI_CR1_RXONLY);
+	}
+
+	temp |= pSPIHandle->SPIConfig.SPI_SclkSpeed << SPI_CR1_BR;
+
+	temp |= (pSPIHandle->SPIConfig.SPI_CPHA <<SPI_CR1_CPHA);
+
+	temp |= (pSPIHandle->SPIConfig.SPI_CPOL<<SPI_CR1_CPOL);
+
+	temp |= (pSPIHandle->SPIConfig.SPI_DFF<<SPI_CR1_DFF);
+
+	temp |= (pSPIHandle->SPIConfig.SPI_SSM<<SPI_CR1_SSM);
+
 	pSPIHandle->pSPIx->CR1 = temp;
 }
 
@@ -73,20 +94,48 @@ void SPI_PClkControl(SPI_RegDef_t *pSPIx, uint8_t enable){
 			SPI4_PCLK_DIS();
 		}
 	}
-
 }
 
+void SPI_Enable(SPI_RegDef_t *pSPIx){
+	pSPIx->CR1 |= (1<<SPI_CR1_SPE);
+}
+
+void SPI_Disable(SPI_RegDef_t *pSPIx){
+	pSPIx->CR1 &= ~(1<<SPI_CR1_SPE);
+}
+
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t enable){
+	if(enable){
+		pSPIx->CR1 |= (1 << SPI_CR1_SSI);
+	}else{
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SSI);
+	}
+}
 /*
  * Data send and receive
  */
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuff, uint32_t TxLen){
 
-	for (int i=0;i<TxLen;i++){
-		pSPIx->DR = pTxBuff[i];
-		while(!(pSPIx->SR & (1 << 1)));
-	}
+	uint8_t dff = (pSPIx->CR1 & (1 << SPI_CR1_DFF)) ;
 
+	while (TxLen>0){
+		while(!(pSPIx->SR & (1 << 1))); // wait till TXE is set
+
+		// check the DFF bit in SPI_CR1
+		if(pSPIx->CR1 &(1<<SPI_CR1_DFF)){
+			pSPIx->DR = *((uint16_t*)pTxBuff);
+			TxLen--;
+			TxLen--;
+			(uint16_t*)pTxBuff++;
+		}else{
+			pSPIx->DR = *pTxBuff;
+			TxLen--;
+			pTxBuff++;
+		}
+
+	}
 }
+
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx,uint8_t *pRxBuff, uint32_t TxLen){
 
 }
