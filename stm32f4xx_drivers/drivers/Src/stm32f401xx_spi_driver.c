@@ -111,6 +111,25 @@ void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t enable){
 		pSPIx->CR1 &= ~(1 << SPI_CR1_SSI);
 	}
 }
+
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t enable){
+	if(enable){
+		pSPIx->CR2 |= (1 << SPI_CR2_SSOE);
+	}else{
+		pSPIx->CR2 &= ~(1 << SPI_CR2_SSOE);
+	}
+}
+
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint8_t flag){
+	{
+	    if(pSPIx->SR & (1 << flag))
+	    {
+	        return FLAG_SET;
+	    }
+	    return FLAG_RESET;
+	}
+}
+
 /*
  * Data send and receive
  */

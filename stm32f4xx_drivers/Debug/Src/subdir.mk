@@ -5,17 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/LexExternal_IT.c \
+../Src/SPI_TxOnly_Arduino.c \
 ../Src/syscalls.c \
 ../Src/sysmem.c 
 
 OBJS += \
-./Src/LexExternal_IT.o \
+./Src/SPI_TxOnly_Arduino.o \
 ./Src/syscalls.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
-./Src/LexExternal_IT.d \
+./Src/SPI_TxOnly_Arduino.d \
 ./Src/syscalls.d \
 ./Src/sysmem.d 
 
@@ -27,7 +27,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/LexExternal_IT.cyclo ./Src/LexExternal_IT.d ./Src/LexExternal_IT.o ./Src/LexExternal_IT.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/SPI_TxOnly_Arduino.cyclo ./Src/SPI_TxOnly_Arduino.d ./Src/SPI_TxOnly_Arduino.o ./Src/SPI_TxOnly_Arduino.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 

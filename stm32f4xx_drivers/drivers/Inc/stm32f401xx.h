@@ -47,7 +47,8 @@
 #define RESET 			 DISABLE
 #define GPIO_PIN_SET 	 SET
 #define GPIO_PIN_RESET	 RESET
-
+#define FLAG_SET		 SET
+#define FLAG_RESET		 RESET
 
 /*
  * base address of FLASH and SRAM memories
@@ -314,6 +315,23 @@ typedef struct{
 #define SPI_CR1_BIDIOE		14
 #define SPI_CR1_BIDIMODE	15
 
+#define SPI_CR2_RX_DMAEN	0
+#define SPI_CR2_TXDMAEN		1
+#define SPI_CR2_SSOE		2
+#define SPI_CR2_FRF			4
+#define SPI_CR2_ERRIE		5
+#define SPI_CR2_RXNEIE		6
+#define SPI_CR2_TXEIE		7
+
+#define SPI_RXNE_FLAG			0
+#define SPI_TXE_FLAG			1
+#define SPI_CHSIDE_FLAG			2
+#define SPI_UDR_FLAG			3
+#define SPI_CRCERR_FLAG			4
+#define SPI_MODF_FLAG			5
+#define SPI_OVR_FLAG			6
+#define SPI_BSY_FLAG			7
+#define SPI_FRE_FLAG			8
 
 
 #endif /* INC_STM32F401XX_H_ */

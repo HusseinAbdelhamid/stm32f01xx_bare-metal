@@ -93,6 +93,9 @@ void SPI_Enable(SPI_RegDef_t *pSPIx);
 void SPI_Disable(SPI_RegDef_t *pSPIx);
 
 void SPI_SSIConfig(SPI_RegDef_t *pSPIx,uint8_t enable);
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t enable);
+
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint8_t flag);
 
 /*
  * Data send and receive
